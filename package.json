@@ -18,6 +18,7 @@
   "scripts": {
     "format": "oxfmt",
     "lint": "oxlint",
+    "test": "bun test",
     "build": "tsdown",
     "prepublishOnly": "bun run build"
   },

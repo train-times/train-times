@@ -10,7 +10,7 @@ permissions: {}
 
 jobs:
   test:
-    name: Build and Lint
+    name: Build and Test
     runs-on: ubuntu-latest
 
     steps:
@@ -33,5 +33,9 @@ jobs:
       - name: Build
         run: bun run build
 
-      - name: Lint
-        run: bun run lint
+      - parallel:
+          - name: Lint
+            run: bun run lint
+
+          - name: Run tests
+            run: bun run test

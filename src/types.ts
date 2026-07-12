@@ -1,7 +1,7 @@
 export interface LiveDeparturesApiResponse {
   trainServices: TrainService[];
   Xmlns: Xmlns;
-  generatedAt: Date;
+  generatedAt: string;
   locationName: string;
   crs: string;
   filterType: string;
