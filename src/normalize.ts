@@ -6,10 +6,10 @@ import type {
 
 interface TrainJourneyBase {
   /**
-   * The train's scheduled time of arrival to the station you are departing from
+   * The train's schedule time of arrival to the station you are departing from
    * This is the time when the train is expected to arrive to the station you are departing from, if it is not delayed
    */
-  readonly scheduledOriginArrivalTime: string | null;
+  readonly scheduleOriginArrivalTime: string | null;
   /**
    * Platform the train arrives on
    */
@@ -95,14 +95,14 @@ function normalizeTrainServiceData(
     destinationStop = allCallingPoints.find((cp) => cp.crs === to);
   }
 
-  const scheduledOriginArrivalTime = service.sta ?? null;
+  const scheduleOriginArrivalTime = service.sta ?? null;
 
   const platform = service.platform ?? null;
 
   if (service.isCancelled || destinationStop?.isCancelled) {
     return {
       status: "cancelled",
-      scheduledOriginArrivalTime,
+      scheduleOriginArrivalTime,
       platform,
     } satisfies TrainJourneyDisrupted;
   }
@@ -110,7 +110,7 @@ function normalizeTrainServiceData(
   if (service.etd === "Delayed") {
     return {
       status: "significantly-delayed",
-      scheduledOriginArrivalTime,
+      scheduleOriginArrivalTime,
       platform,
     } satisfies TrainJourneyDisrupted;
   }
@@ -141,7 +141,7 @@ function normalizeTrainServiceData(
 
   return {
     status,
-    scheduledOriginArrivalTime,
+    scheduleOriginArrivalTime,
     originArrivalTime,
     originDepartureTime,
     platform,

@@ -8,7 +8,7 @@ exports[`normalizeTrainServicesData example 1 1`] = `
     "originArrivalTime": "09:02",
     "originDepartureTime": "09:03",
     "platform": "2",
-    "scheduledOriginArrivalTime": "09:02",
+    "scheduleOriginArrivalTime": "09:02",
     "status": "on-time",
   },
   {
@@ -17,7 +17,7 @@ exports[`normalizeTrainServicesData example 1 1`] = `
     "originArrivalTime": "09:22",
     "originDepartureTime": "09:23",
     "platform": "1",
-    "scheduledOriginArrivalTime": "09:10",
+    "scheduleOriginArrivalTime": "09:10",
     "status": "delayed",
   },
   {
@@ -26,7 +26,7 @@ exports[`normalizeTrainServicesData example 1 1`] = `
     "originArrivalTime": "09:47",
     "originDepartureTime": "09:49",
     "platform": "2",
-    "scheduledOriginArrivalTime": "09:47",
+    "scheduleOriginArrivalTime": "09:47",
     "status": "on-time",
   },
   {
@@ -35,7 +35,7 @@ exports[`normalizeTrainServicesData example 1 1`] = `
     "originArrivalTime": "10:02",
     "originDepartureTime": "10:03",
     "platform": "2",
-    "scheduledOriginArrivalTime": "10:02",
+    "scheduleOriginArrivalTime": "10:02",
     "status": "on-time",
   },
   {
@@ -44,7 +44,7 @@ exports[`normalizeTrainServicesData example 1 1`] = `
     "originArrivalTime": "10:09",
     "originDepartureTime": "10:11",
     "platform": null,
-    "scheduledOriginArrivalTime": "10:09",
+    "scheduleOriginArrivalTime": "10:09",
     "status": "on-time",
   },
   {
@@ -53,7 +53,7 @@ exports[`normalizeTrainServicesData example 1 1`] = `
     "originArrivalTime": "10:48",
     "originDepartureTime": "10:49",
     "platform": null,
-    "scheduledOriginArrivalTime": "10:48",
+    "scheduleOriginArrivalTime": "10:48",
     "status": "on-time",
   },
 ]
@@ -67,7 +67,7 @@ exports[`normalizeTrainServicesData example 2 1`] = `
     "originArrivalTime": "09:30",
     "originDepartureTime": "09:31",
     "platform": "1",
-    "scheduledOriginArrivalTime": "09:10",
+    "scheduleOriginArrivalTime": "09:10",
     "status": "delayed",
   },
   {
@@ -76,7 +76,7 @@ exports[`normalizeTrainServicesData example 2 1`] = `
     "originArrivalTime": "09:47",
     "originDepartureTime": "09:49",
     "platform": "2",
-    "scheduledOriginArrivalTime": "09:47",
+    "scheduleOriginArrivalTime": "09:47",
     "status": "on-time",
   },
   {
@@ -85,7 +85,7 @@ exports[`normalizeTrainServicesData example 2 1`] = `
     "originArrivalTime": "10:02",
     "originDepartureTime": "10:03",
     "platform": "2",
-    "scheduledOriginArrivalTime": "10:02",
+    "scheduleOriginArrivalTime": "10:02",
     "status": "on-time",
   },
   {
@@ -94,7 +94,7 @@ exports[`normalizeTrainServicesData example 2 1`] = `
     "originArrivalTime": "10:09",
     "originDepartureTime": "10:11",
     "platform": "1",
-    "scheduledOriginArrivalTime": "10:09",
+    "scheduleOriginArrivalTime": "10:09",
     "status": "on-time",
   },
   {
@@ -103,12 +103,12 @@ exports[`normalizeTrainServicesData example 2 1`] = `
     "originArrivalTime": "10:48",
     "originDepartureTime": "10:49",
     "platform": null,
-    "scheduledOriginArrivalTime": "10:48",
+    "scheduleOriginArrivalTime": "10:48",
     "status": "on-time",
   },
   {
     "platform": null,
-    "scheduledOriginArrivalTime": "11:02",
+    "scheduleOriginArrivalTime": "11:02",
     "status": "cancelled",
   },
   {
@@ -117,7 +117,7 @@ exports[`normalizeTrainServicesData example 2 1`] = `
     "originArrivalTime": "11:09",
     "originDepartureTime": "11:11",
     "platform": null,
-    "scheduledOriginArrivalTime": "11:09",
+    "scheduleOriginArrivalTime": "11:09",
     "status": "on-time",
   },
 ]
