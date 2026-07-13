@@ -1,9 +1,11 @@
-export interface LiveDeparturesApiResponse {
+export interface LiveDeparturesArrivalsApiResponse {
   trainServices: TrainService[];
   Xmlns: Xmlns;
-  generatedAt: Date;
+  generatedAt: string;
   locationName: string;
   crs: string;
+  filterLocationName: string;
+  filtercrs: string;
   filterType: string;
   nrccMessages: NrccMessage[];
   platformAvailable: boolean;
