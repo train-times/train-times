@@ -1,4 +1,4 @@
-import type { LiveDeparturesArrivalsApiResponse } from "../../src/types";
+import type { LiveDeparturesArrivalsApiResponse } from "#api/types";
 
 export const example1 = {
   trainServices: [
