@@ -1,4 +1,4 @@
-import { getDeparturesArrivalsData } from "../src/api";
+import { getDeparturesArrivalsData } from "#api";
 
 declare global {
   namespace NodeJS {
@@ -17,7 +17,7 @@ if (!apiKey) {
 const data = await getDeparturesArrivalsData({
   apiKey,
   from: "BSK",
-  to: "WIN",
+  to: "WAT",
 });
 
 console.log(JSON.stringify(data));

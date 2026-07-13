@@ -2,59 +2,28 @@ import type {
   CallingPointElement,
   LiveDeparturesArrivalsApiResponse,
   TrainService,
+} from "#api/types";
+
+import type {
+  TrainJourney,
+  TrainJourneyCancelled,
+  TrainJourneyDelayed,
+  TrainJourneyLate,
+  TrainJourneyOnTime,
 } from "./types";
 
-interface TrainJourneyBase {
-  /**
-   * The train's schedule time of arrival to the station you are departing from
-   * This is the time when the train is expected to arrive to the station you are departing from, if it is not delayed
-   */
-  readonly scheduleOriginArrivalTime: string | null;
-  /**
-   * Platform the train arrives on
-   */
-  readonly platform: string | null;
-}
-
-interface TrainJourneyNormal extends TrainJourneyBase {
-  readonly status: "on-time" | "delayed";
-  /**
-   * The time the train is expected to arrive to the station you are departing from
-   */
-  readonly originArrivalTime: string | null;
-  /**
-   * The time the train is expected to departure from the station you are departing from
-   */
-  readonly originDepartureTime: string | null;
-  /**
-   * The time the train is expected to arrive to the destination
-   */
-  readonly destinationArrivalTime: string | null;
-  /**
-   * The duration of the journey in minutes
-   */
-  readonly durationMinutes: number | null;
-}
-
-interface TrainJourneyDisrupted extends TrainJourneyBase {
-  readonly status: "significantly-delayed" | "cancelled";
-}
-
-type TrainJourney = TrainJourneyNormal | TrainJourneyDisrupted;
-
 function getDurationMinutes(
-  originDepartureTime: string,
-  destinationArrivalTime: string,
+  fromTime: string | null,
+  toTime: string | null,
 ): number | null {
-  if (
-    originDepartureTime.includes("Delayed") ||
-    destinationArrivalTime.includes("Delayed")
-  ) {
+  if (fromTime === null || toTime === null) return null;
+
+  if (fromTime.includes("Delayed") || toTime.includes("Delayed")) {
     return null;
   }
 
-  const [depH, depM] = originDepartureTime.split(":").map(Number);
-  const [arrH, arrM] = destinationArrivalTime.split(":").map(Number);
+  const [depH, depM] = fromTime.split(":").map(Number);
+  const [arrH, arrM] = toTime.split(":").map(Number);
 
   if (!depH || !arrH) return null;
 
@@ -97,22 +66,32 @@ function normalizeTrainServiceData(
 
   const scheduleOriginArrivalTime = service.sta ?? null;
 
+  const scheduleOriginDepartureTime = service.std ?? null;
+
   const platform = service.platform ?? null;
+
+  const operator = service.operator;
+  const operatorCode = service.operatorCode;
 
   if (service.isCancelled || destinationStop?.isCancelled) {
     return {
       status: "cancelled",
       scheduleOriginArrivalTime,
-      platform,
-    } satisfies TrainJourneyDisrupted;
+      scheduleOriginDepartureTime,
+      operator,
+      operatorCode,
+    } satisfies TrainJourneyCancelled;
   }
 
   if (service.etd === "Delayed") {
     return {
-      status: "significantly-delayed",
+      status: "delayed",
       scheduleOriginArrivalTime,
+      scheduleOriginDepartureTime,
       platform,
-    } satisfies TrainJourneyDisrupted;
+      operator,
+      operatorCode,
+    } satisfies TrainJourneyDelayed;
   }
 
   const originDepartureTime = cleanTimeStr(
@@ -127,27 +106,56 @@ function normalizeTrainServiceData(
       )
     : null;
 
-  const durationMinutes =
-    originDepartureTime && destinationArrivalTime
-      ? getDurationMinutes(originDepartureTime, destinationArrivalTime)
-      : null;
+  const durationMinutes = getDurationMinutes(
+    originDepartureTime,
+    destinationArrivalTime,
+  );
 
   const originArrivalTime = cleanTimeStr(
     service.eta === "On time" ? service.sta : (service.eta ?? service.sta),
   );
 
-  const status =
-    service.etd === "On time" || !service.etd ? "on-time" : "delayed";
+  const status = service.etd === "On time" || !service.etd ? "on-time" : "late";
+
+  if (status === "late") {
+    const arrivalLateByMinutes = getDurationMinutes(
+      scheduleOriginArrivalTime,
+      originArrivalTime,
+    );
+
+    const departureLateByMinutes = getDurationMinutes(
+      scheduleOriginDepartureTime,
+      originDepartureTime,
+    );
+
+    return {
+      status,
+      scheduleOriginArrivalTime,
+      scheduleOriginDepartureTime,
+      originArrivalTime,
+      originDepartureTime,
+      arrivalLateByMinutes,
+      departureLateByMinutes,
+      platform,
+      destinationArrivalTime,
+      durationMinutes,
+      operator,
+      operatorCode,
+    } satisfies TrainJourneyLate;
+  }
 
   return {
     status,
     scheduleOriginArrivalTime,
+    scheduleOriginDepartureTime,
     originArrivalTime,
     originDepartureTime,
     platform,
     destinationArrivalTime,
     durationMinutes,
-  } satisfies TrainJourneyNormal;
+    operator,
+    operatorCode,
+  } satisfies TrainJourneyOnTime;
 }
 
 function normalizeTrainServicesData(
