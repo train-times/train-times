@@ -16,6 +16,7 @@
     "./package.json": "./package.json"
   },
   "scripts": {
+    "fixture": "bun run ./scripts/generate-fixture",
     "format": "oxfmt",
     "lint": "oxlint",
     "test": "bun test",

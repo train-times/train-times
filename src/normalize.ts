@@ -1,28 +1,46 @@
 import type {
   CallingPointElement,
-  LiveDeparturesApiResponse,
+  LiveDeparturesArrivalsApiResponse,
   TrainService,
 } from "./types";
 
-interface TrainJourneyOnTimeOrDelayed {
-  readonly isCancelled: false;
-  readonly status: "on-time" | "delayed" | "significantly-delayed";
+interface TrainJourneyBase {
+  /**
+   * The train's scheduled time of arrival to the station you are departing from
+   * This is the time when the train is expected to arrive to the station you are departing from, if it is not delayed
+   */
   readonly scheduledOriginArrivalTime: string | null;
-  readonly originArrivalTime: string | null;
-  readonly originDepartureTime: string | null;
+  /**
+   * Platform the train arrives on
+   */
   readonly platform: string | null;
+}
+
+interface TrainJourneyNormal extends TrainJourneyBase {
+  readonly status: "on-time" | "delayed";
+  /**
+   * The time the train is expected to arrive to the station you are departing from
+   */
+  readonly originArrivalTime: string | null;
+  /**
+   * The time the train is expected to departure from the station you are departing from
+   */
+  readonly originDepartureTime: string | null;
+  /**
+   * The time the train is expected to arrive to the destination
+   */
   readonly destinationArrivalTime: string | null;
+  /**
+   * The duration of the journey in minutes
+   */
   readonly durationMinutes: number | null;
 }
 
-interface TrainJourneyCanceled {
-  readonly isCancelled: true;
-  readonly status: "cancelled";
-  readonly scheduledOriginArrivalTime: string | null;
-  readonly platform: string | null;
+interface TrainJourneyDisrupted extends TrainJourneyBase {
+  readonly status: "significantly-delayed" | "cancelled";
 }
 
-type TrainJourney = TrainJourneyOnTimeOrDelayed | TrainJourneyCanceled;
+type TrainJourney = TrainJourneyNormal | TrainJourneyDisrupted;
 
 function getDurationMinutes(
   originDepartureTime: string,
@@ -52,6 +70,18 @@ function getDurationMinutes(
   return Math.ceil((arrDate.getTime() - depDate.getTime()) / 60_000);
 }
 
+function cleanTimeStr(time?: string): string | null {
+  if (
+    !time ||
+    time === "On time" ||
+    time === "Delayed" ||
+    time === "Cancelled"
+  ) {
+    return null;
+  }
+  return time;
+}
+
 function normalizeTrainServiceData(
   service: TrainService,
   to: string,
@@ -65,30 +95,36 @@ function normalizeTrainServiceData(
     destinationStop = allCallingPoints.find((cp) => cp.crs === to);
   }
 
-  const scheduledOriginArrivalTime =
-    (service.eta === "On time"
-      ? (service.sta ?? service.std)
-      : (service.eta ?? service.sta)) ?? null;
+  const scheduledOriginArrivalTime = service.sta ?? null;
 
   const platform = service.platform ?? null;
 
   if (service.isCancelled || destinationStop?.isCancelled) {
     return {
-      isCancelled: true,
       status: "cancelled",
       scheduledOriginArrivalTime,
       platform,
-    } satisfies TrainJourneyCanceled;
+    } satisfies TrainJourneyDisrupted;
   }
 
-  const originDepartureTime =
-    (service.etd === "On time" ? service.std : (service.etd ?? service.std)) ??
-    null;
+  if (service.etd === "Delayed") {
+    return {
+      status: "significantly-delayed",
+      scheduledOriginArrivalTime,
+      platform,
+    } satisfies TrainJourneyDisrupted;
+  }
+
+  const originDepartureTime = cleanTimeStr(
+    service.etd === "On time" ? service.std : (service.etd ?? service.std),
+  );
 
   const destinationArrivalTime = destinationStop
-    ? destinationStop.et === "On time"
-      ? destinationStop.st
-      : (destinationStop.et ?? destinationStop.st)
+    ? cleanTimeStr(
+        destinationStop.et === "On time"
+          ? destinationStop.st
+          : (destinationStop.et ?? destinationStop.st),
+      )
     : null;
 
   const durationMinutes =
@@ -96,20 +132,14 @@ function normalizeTrainServiceData(
       ? getDurationMinutes(originDepartureTime, destinationArrivalTime)
       : null;
 
-  const originArrivalTime =
-    service.etd === "On time"
-      ? scheduledOriginArrivalTime
-      : (service.etd ?? "Delayed");
+  const originArrivalTime = cleanTimeStr(
+    service.eta === "On time" ? service.sta : (service.eta ?? service.sta),
+  );
 
   const status =
-    service.etd === "On time"
-      ? "on-time"
-      : service.etd
-        ? "delayed"
-        : "significantly-delayed";
+    service.etd === "On time" || !service.etd ? "on-time" : "delayed";
 
   return {
-    isCancelled: false,
     status,
     scheduledOriginArrivalTime,
     originArrivalTime,
@@ -117,11 +147,11 @@ function normalizeTrainServiceData(
     platform,
     destinationArrivalTime,
     durationMinutes,
-  } satisfies TrainJourneyOnTimeOrDelayed;
+  } satisfies TrainJourneyNormal;
 }
 
 function normalizeTrainServicesData(
-  data: LiveDeparturesApiResponse,
+  data: LiveDeparturesArrivalsApiResponse,
   to: string,
 ): TrainJourney[] {
   return data.trainServices.map((service) =>
