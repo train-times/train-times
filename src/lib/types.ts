@@ -37,7 +37,7 @@ interface TrainJourneyNormalBase extends TrainJourneyBase {
   /**
    * The duration of the journey in minutes
    */
-  readonly durationMinutes: number | null;
+  readonly journeyDurationMinutes: number | null;
   /**
    * Platform the train arrives on
    */

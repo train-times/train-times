@@ -4,7 +4,7 @@ exports[`normalizeTrainServicesData example 1 1`] = `
 [
   {
     "destinationArrivalTime": "09:21",
-    "durationMinutes": 18,
+    "journeyDurationMinutes": 18,
     "operator": "South Western Railway",
     "operatorCode": "SW",
     "originArrivalTime": "09:02",
@@ -18,7 +18,7 @@ exports[`normalizeTrainServicesData example 1 1`] = `
     "arrivalLateByMinutes": 12,
     "departureLateByMinutes": 12,
     "destinationArrivalTime": "09:37",
-    "durationMinutes": 14,
+    "journeyDurationMinutes": 14,
     "operator": "CrossCountry",
     "operatorCode": "XC",
     "originArrivalTime": "09:22",
@@ -30,7 +30,7 @@ exports[`normalizeTrainServicesData example 1 1`] = `
   },
   {
     "destinationArrivalTime": "10:04",
-    "durationMinutes": 15,
+    "journeyDurationMinutes": 15,
     "operator": "South Western Railway",
     "operatorCode": "SW",
     "originArrivalTime": "09:47",
@@ -42,7 +42,7 @@ exports[`normalizeTrainServicesData example 1 1`] = `
   },
   {
     "destinationArrivalTime": "10:21",
-    "durationMinutes": 18,
+    "journeyDurationMinutes": 18,
     "operator": "South Western Railway",
     "operatorCode": "SW",
     "originArrivalTime": "10:02",
@@ -54,7 +54,7 @@ exports[`normalizeTrainServicesData example 1 1`] = `
   },
   {
     "destinationArrivalTime": "10:26",
-    "durationMinutes": 15,
+    "journeyDurationMinutes": 15,
     "operator": "CrossCountry",
     "operatorCode": "XC",
     "originArrivalTime": "10:09",
@@ -66,7 +66,7 @@ exports[`normalizeTrainServicesData example 1 1`] = `
   },
   {
     "destinationArrivalTime": "11:04",
-    "durationMinutes": 15,
+    "journeyDurationMinutes": 15,
     "operator": "South Western Railway",
     "operatorCode": "SW",
     "originArrivalTime": "10:48",
@@ -85,7 +85,7 @@ exports[`normalizeTrainServicesData example 2 1`] = `
     "arrivalLateByMinutes": 20,
     "departureLateByMinutes": 20,
     "destinationArrivalTime": "09:45",
-    "durationMinutes": 14,
+    "journeyDurationMinutes": 14,
     "operator": "CrossCountry",
     "operatorCode": "XC",
     "originArrivalTime": "09:30",
@@ -97,7 +97,7 @@ exports[`normalizeTrainServicesData example 2 1`] = `
   },
   {
     "destinationArrivalTime": "10:04",
-    "durationMinutes": 15,
+    "journeyDurationMinutes": 15,
     "operator": "South Western Railway",
     "operatorCode": "SW",
     "originArrivalTime": "09:47",
@@ -109,7 +109,7 @@ exports[`normalizeTrainServicesData example 2 1`] = `
   },
   {
     "destinationArrivalTime": "10:21",
-    "durationMinutes": 18,
+    "journeyDurationMinutes": 18,
     "operator": "South Western Railway",
     "operatorCode": "SW",
     "originArrivalTime": "10:02",
@@ -121,7 +121,7 @@ exports[`normalizeTrainServicesData example 2 1`] = `
   },
   {
     "destinationArrivalTime": "10:26",
-    "durationMinutes": 15,
+    "journeyDurationMinutes": 15,
     "operator": "CrossCountry",
     "operatorCode": "XC",
     "originArrivalTime": "10:09",
@@ -133,7 +133,7 @@ exports[`normalizeTrainServicesData example 2 1`] = `
   },
   {
     "destinationArrivalTime": "11:04",
-    "durationMinutes": 15,
+    "journeyDurationMinutes": 15,
     "operator": "South Western Railway",
     "operatorCode": "SW",
     "originArrivalTime": "10:48",
@@ -152,7 +152,7 @@ exports[`normalizeTrainServicesData example 2 1`] = `
   },
   {
     "destinationArrivalTime": "11:26",
-    "durationMinutes": 15,
+    "journeyDurationMinutes": 15,
     "operator": "CrossCountry",
     "operatorCode": "XC",
     "originArrivalTime": "11:09",
@@ -171,7 +171,7 @@ exports[`normalizeTrainServicesData example 3 1`] = `
     "arrivalLateByMinutes": 5,
     "departureLateByMinutes": 9,
     "destinationArrivalTime": "15:52",
-    "durationMinutes": 40,
+    "journeyDurationMinutes": 40,
     "operator": "South Western Railway",
     "operatorCode": "SW",
     "originArrivalTime": "15:08",
@@ -190,7 +190,7 @@ exports[`normalizeTrainServicesData example 3 1`] = `
   },
   {
     "destinationArrivalTime": "16:36",
-    "durationMinutes": 72,
+    "journeyDurationMinutes": 72,
     "operator": "South Western Railway",
     "operatorCode": "SW",
     "originArrivalTime": null,
@@ -209,7 +209,7 @@ exports[`normalizeTrainServicesData example 3 1`] = `
   },
   {
     "destinationArrivalTime": "16:20",
-    "durationMinutes": 43,
+    "journeyDurationMinutes": 43,
     "operator": "South Western Railway",
     "operatorCode": "SW",
     "originArrivalTime": "15:36",
@@ -221,7 +221,7 @@ exports[`normalizeTrainServicesData example 3 1`] = `
   },
   {
     "destinationArrivalTime": "17:02",
-    "durationMinutes": 68,
+    "journeyDurationMinutes": 68,
     "operator": "South Western Railway",
     "operatorCode": "SW",
     "originArrivalTime": null,
@@ -250,7 +250,7 @@ exports[`normalizeTrainServicesData example 3 1`] = `
     "arrivalLateByMinutes": 8,
     "departureLateByMinutes": 8,
     "destinationArrivalTime": "17:10",
-    "durationMinutes": 50,
+    "journeyDurationMinutes": 50,
     "operator": "South Western Railway",
     "operatorCode": "SW",
     "originArrivalTime": "16:19",
@@ -262,7 +262,7 @@ exports[`normalizeTrainServicesData example 3 1`] = `
   },
   {
     "destinationArrivalTime": "17:36",
-    "durationMinutes": 72,
+    "journeyDurationMinutes": 72,
     "operator": "South Western Railway",
     "operatorCode": "SW",
     "originArrivalTime": null,

@@ -106,7 +106,7 @@ function normalizeTrainServiceData(
       )
     : null;
 
-  const durationMinutes = getDurationMinutes(
+  const journeyDurationMinutes = getDurationMinutes(
     originDepartureTime,
     destinationArrivalTime,
   );
@@ -138,7 +138,7 @@ function normalizeTrainServiceData(
       departureLateByMinutes,
       platform,
       destinationArrivalTime,
-      durationMinutes,
+      journeyDurationMinutes,
       operator,
       operatorCode,
     } satisfies TrainJourneyLate;
@@ -152,7 +152,7 @@ function normalizeTrainServiceData(
     originDepartureTime,
     platform,
     destinationArrivalTime,
-    durationMinutes,
+    journeyDurationMinutes,
     operator,
     operatorCode,
   } satisfies TrainJourneyOnTime;
