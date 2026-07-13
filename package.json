@@ -5,7 +5,7 @@
   "author": "gameroman",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/gameroman-npm/train-times.git"
+    "url": "git+https://github.com/train-times/train-times.git"
   },
   "files": [
     "dist"

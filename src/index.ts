@@ -1,6 +1,5 @@
-import { normalizeTrainServicesData } from "#lib/normalize";
-import type { TrainJourney } from "#lib/normalize";
-
+import { normalizeTrainServicesData } from "./lib/normalize";
+import type { TrainJourney } from "./lib/normalize";
 import { getDeparturesArrivalsData } from "./api";
 import type { LiveDeparturesApiOptions } from "./api";
 
@@ -12,3 +11,5 @@ async function getJourneyInfo(
 }
 
 export { getJourneyInfo };
+
+export type * from "./lib/types";
