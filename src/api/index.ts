@@ -1,3 +1,4 @@
+import { ApiError, NetworkError } from "./errors";
 import type { LiveDeparturesArrivalsApiResponse } from "./types";
 
 const API_URL =
@@ -55,7 +56,17 @@ async function getDeparturesArrivalsData({
   });
 
   if (!response.ok) {
-    throw new Error(`HTTP network error! status Code: ${response.status}`);
+    const errorBody = await response.json().catch(() => null);
+    const message = errorBody?.Message;
+
+    if (message) {
+      throw new ApiError(response.status, message);
+    }
+
+    throw new NetworkError(
+      response.status,
+      `HTTP network error! status code: ${response.status}`,
+    );
   }
 
   return await response.json();

@@ -18,6 +18,7 @@ export {
 
 export type { LiveDeparturesApiOptions };
 
+export { TrainTimesError, ApiError, NetworkError } from "./api/errors";
 export type { LiveDeparturesArrivalsApiResponse } from "./api/types";
 
 export type * from "./lib/types";
