@@ -6,7 +6,7 @@ export interface LiveDeparturesArrivalsApiResponse {
   crs: string;
   filterLocationName: string;
   filtercrs: string;
-  filterType: string;
+  filterType: "to";
   nrccMessages: NrccMessage[];
   platformAvailable: boolean;
   areServicesAvailable: boolean;

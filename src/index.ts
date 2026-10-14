@@ -1,13 +1,13 @@
 import { getDeparturesArrivalsData } from "./api";
 import type { LiveDeparturesApiOptions } from "./api";
 import { normalizeTrainServicesData } from "./lib/normalize";
-import type { TrainJourney } from "./lib/normalize";
+import type { NormalizedTrainServicesData } from "./lib/types";
 
 async function getJourneysData(
   options: LiveDeparturesApiOptions,
-): Promise<TrainJourney[]> {
+): Promise<NormalizedTrainServicesData> {
   const data = await getDeparturesArrivalsData(options);
-  return normalizeTrainServicesData(data, options.to);
+  return normalizeTrainServicesData(data);
 }
 
 export {

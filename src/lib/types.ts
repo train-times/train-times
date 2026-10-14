@@ -78,6 +78,16 @@ type TrainJourneyDisrupted = TrainJourneyCancelled | TrainJourneyDelayed;
 
 type TrainJourney = TrainJourneyNormal | TrainJourneyDisrupted;
 
+interface NormalizedTrainServicesData {
+  readonly journeys?: TrainJourney[];
+
+  readonly fromCode: string;
+  readonly toCode: string;
+
+  readonly fromName: string;
+  readonly toName: string;
+}
+
 export type {
   TrainJourney,
   TrainJourneyCancelled,
@@ -86,4 +96,5 @@ export type {
   TrainJourneyLate,
   TrainJourneyNormal,
   TrainJourneyOnTime,
+  NormalizedTrainServicesData,
 };
