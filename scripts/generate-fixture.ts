@@ -16,8 +16,8 @@ if (!apiKey) {
 
 const data = await getDeparturesArrivalsData({
   apiKey,
-  from: "BSK",
-  to: "WAT",
+  from: "ABC",
+  to: "DEF",
 });
 
 console.log(JSON.stringify(data));

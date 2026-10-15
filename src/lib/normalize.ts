@@ -5,6 +5,7 @@ import type {
 } from "#api/types";
 
 import type {
+  NormalizedTrainServicesData,
   TrainJourney,
   TrainJourneyCancelled,
   TrainJourneyDelayed,
@@ -160,11 +161,18 @@ function normalizeTrainServiceData(
 
 function normalizeTrainServicesData(
   data: LiveDeparturesArrivalsApiResponse,
-  to: string,
-): TrainJourney[] {
-  return data.trainServices.map((service) =>
-    normalizeTrainServiceData(service, to),
+): NormalizedTrainServicesData {
+  const journeys = data.trainServices?.map((service) =>
+    normalizeTrainServiceData(service, data.filtercrs),
   );
+
+  return {
+    journeys,
+    fromCode: data.crs,
+    fromName: data.locationName,
+    toCode: data.filtercrs,
+    toName: data.filterLocationName,
+  };
 }
 
 export { normalizeTrainServicesData };

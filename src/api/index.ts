@@ -1,3 +1,4 @@
+import { ApiError, NetworkError } from "./errors";
 import type { LiveDeparturesArrivalsApiResponse } from "./types";
 
 const API_URL =
@@ -9,11 +10,11 @@ interface LiveDeparturesApiOptions {
    */
   apiKey: string;
   /**
-   * The station you are departing from
+   * The CRS code of the station you are departing from
    */
   from: string;
   /**
-   * The destination station
+   * The CRS code of the destination station
    */
   to: string;
   /**
@@ -27,7 +28,8 @@ interface LiveDeparturesApiOptions {
    */
   timeOffset?: number;
   /**
-   * Time window to search within in minutes
+   * Time window to search within in minutes.
+   * Maximum is `120` minutes
    * @default 120
    */
   timeWindow?: number;
@@ -55,7 +57,17 @@ async function getDeparturesArrivalsData({
   });
 
   if (!response.ok) {
-    throw new Error(`HTTP network error! status Code: ${response.status}`);
+    const errorBody = await response.json().catch(() => null);
+    const message = errorBody?.Message;
+
+    if (message) {
+      throw new ApiError(response.status, message);
+    }
+
+    throw new NetworkError(
+      response.status,
+      `HTTP network error! status code: ${response.status}`,
+    );
   }
 
   return await response.json();
