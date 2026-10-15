@@ -10,11 +10,11 @@ interface LiveDeparturesApiOptions {
    */
   apiKey: string;
   /**
-   * The station you are departing from
+   * The CRS code of the station you are departing from
    */
   from: string;
   /**
-   * The destination station
+   * The CRS code of the destination station
    */
   to: string;
   /**
@@ -28,7 +28,8 @@ interface LiveDeparturesApiOptions {
    */
   timeOffset?: number;
   /**
-   * Time window to search within in minutes
+   * Time window to search within in minutes.
+   * Maximum is `120` minutes
    * @default 120
    */
   timeWindow?: number;
