@@ -13,6 +13,9 @@ import type {
   TrainJourneyOnTime,
 } from "./types";
 
+const isVaildNumber = (n: number | undefined): n is number =>
+  !Number.isNaN(n) && n !== undefined;
+
 function getDurationMinutes(
   fromTime: string | null,
   toTime: string | null,
@@ -26,7 +29,14 @@ function getDurationMinutes(
   const [depH, depM] = fromTime.split(":").map(Number);
   const [arrH, arrM] = toTime.split(":").map(Number);
 
-  if (!depH || !arrH) return null;
+  if (
+    !isVaildNumber(depH) ||
+    !isVaildNumber(depM) ||
+    !isVaildNumber(arrH) ||
+    !isVaildNumber(arrM)
+  ) {
+    return null;
+  }
 
   const depDate = new Date();
   depDate.setHours(depH, depM, 0, 0);
@@ -175,5 +185,5 @@ function normalizeTrainServicesData(
   };
 }
 
-export { normalizeTrainServicesData };
+export { getDurationMinutes, normalizeTrainServicesData };
 export type { TrainJourney };
