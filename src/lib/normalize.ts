@@ -13,7 +13,7 @@ import type {
   TrainJourneyOnTime,
 } from "./types";
 
-const isVaildNumber = (n: number | undefined): n is number =>
+const isValidNumber = (n: number | undefined): n is number =>
   !Number.isNaN(n) && n !== undefined;
 
 function getDurationMinutes(
@@ -30,10 +30,10 @@ function getDurationMinutes(
   const [arrH, arrM] = toTime.split(":").map(Number);
 
   if (
-    !isVaildNumber(depH) ||
-    !isVaildNumber(depM) ||
-    !isVaildNumber(arrH) ||
-    !isVaildNumber(arrM)
+    !isValidNumber(depH) ||
+    !isValidNumber(depM) ||
+    !isValidNumber(arrH) ||
+    !isValidNumber(arrM)
   ) {
     return null;
   }
