@@ -1,5 +1,4 @@
 import type {
-  CallingPointElement,
   LiveDeparturesArrivalsApiResponse,
   TrainService,
 } from "#api/types";
@@ -50,7 +49,8 @@ function getDurationMinutes(
   return Math.ceil((arrDate.getTime() - depDate.getTime()) / 60_000);
 }
 
-function cleanTimeStr(time?: string): string | null {
+function resolveTime(estimated?: string, scheduled?: string): string | null {
+  const time = estimated === "On time" ? scheduled : (estimated ?? scheduled);
   if (
     !time ||
     time === "On time" ||
@@ -66,14 +66,9 @@ function normalizeTrainServiceData(
   service: TrainService,
   to: string,
 ): TrainJourney {
-  let destinationStop: CallingPointElement | undefined;
-
-  if (service.subsequentCallingPoints) {
-    const allCallingPoints = service.subsequentCallingPoints.flatMap(
-      (scp) => scp.callingPoint,
-    );
-    destinationStop = allCallingPoints.find((cp) => cp.crs === to);
-  }
+  const destinationStop = service.subsequentCallingPoints
+    ?.flatMap((scp) => scp.callingPoint)
+    .find((cp) => cp.crs === to);
 
   const scheduleOriginArrivalTime = service.sta ?? null;
 
@@ -81,8 +76,7 @@ function normalizeTrainServiceData(
 
   const platform = service.platform ?? null;
 
-  const operator = service.operator;
-  const operatorCode = service.operatorCode;
+  const { operator, operatorCode } = service;
 
   if (service.isCancelled || destinationStop?.isCancelled) {
     return {
@@ -105,26 +99,19 @@ function normalizeTrainServiceData(
     } satisfies TrainJourneyDelayed;
   }
 
-  const originDepartureTime = cleanTimeStr(
-    service.etd === "On time" ? service.std : (service.etd ?? service.std),
-  );
+  const originDepartureTime = resolveTime(service.etd, service.std);
 
-  const destinationArrivalTime = destinationStop
-    ? cleanTimeStr(
-        destinationStop.et === "On time"
-          ? destinationStop.st
-          : (destinationStop.et ?? destinationStop.st),
-      )
-    : null;
+  const destinationArrivalTime = resolveTime(
+    destinationStop?.et,
+    destinationStop?.st,
+  );
 
   const journeyDurationMinutes = getDurationMinutes(
     originDepartureTime,
     destinationArrivalTime,
   );
 
-  const originArrivalTime = cleanTimeStr(
-    service.eta === "On time" ? service.sta : (service.eta ?? service.sta),
-  );
+  const originArrivalTime = resolveTime(service.eta, service.sta);
 
   const status = service.etd === "On time" || !service.etd ? "on-time" : "late";
 
