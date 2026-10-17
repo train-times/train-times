@@ -1,12 +1,12 @@
 export interface LiveDeparturesArrivalsApiResponse {
-  trainServices: TrainService[];
+  trainServices?: TrainService[];
   Xmlns: Xmlns;
   generatedAt: string;
   locationName: string;
   crs: string;
   filterLocationName: string;
   filtercrs: string;
-  filterType: string;
+  filterType: "to";
   nrccMessages: NrccMessage[];
   platformAvailable: boolean;
   areServicesAvailable: boolean;

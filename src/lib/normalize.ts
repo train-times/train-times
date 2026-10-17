@@ -1,16 +1,19 @@
 import type {
-  CallingPointElement,
   LiveDeparturesArrivalsApiResponse,
   TrainService,
 } from "#api/types";
 
 import type {
+  NormalizedTrainServicesData,
   TrainJourney,
   TrainJourneyCancelled,
   TrainJourneyDelayed,
   TrainJourneyLate,
   TrainJourneyOnTime,
 } from "./types";
+
+const isValidNumber = (n: number | undefined): n is number =>
+  !Number.isNaN(n) && n !== undefined;
 
 function getDurationMinutes(
   fromTime: string | null,
@@ -25,7 +28,14 @@ function getDurationMinutes(
   const [depH, depM] = fromTime.split(":").map(Number);
   const [arrH, arrM] = toTime.split(":").map(Number);
 
-  if (!depH || !arrH) return null;
+  if (
+    !isValidNumber(depH) ||
+    !isValidNumber(depM) ||
+    !isValidNumber(arrH) ||
+    !isValidNumber(arrM)
+  ) {
+    return null;
+  }
 
   const depDate = new Date();
   depDate.setHours(depH, depM, 0, 0);
@@ -39,7 +49,8 @@ function getDurationMinutes(
   return Math.ceil((arrDate.getTime() - depDate.getTime()) / 60_000);
 }
 
-function cleanTimeStr(time?: string): string | null {
+function resolveTime(estimated?: string, scheduled?: string): string | null {
+  const time = estimated === "On time" ? scheduled : (estimated ?? scheduled);
   if (
     !time ||
     time === "On time" ||
@@ -55,14 +66,9 @@ function normalizeTrainServiceData(
   service: TrainService,
   to: string,
 ): TrainJourney {
-  let destinationStop: CallingPointElement | undefined;
-
-  if (service.subsequentCallingPoints) {
-    const allCallingPoints = service.subsequentCallingPoints.flatMap(
-      (scp) => scp.callingPoint,
-    );
-    destinationStop = allCallingPoints.find((cp) => cp.crs === to);
-  }
+  const destinationStop = service.subsequentCallingPoints
+    ?.flatMap((scp) => scp.callingPoint)
+    .find((cp) => cp.crs === to);
 
   const scheduleOriginArrivalTime = service.sta ?? null;
 
@@ -70,8 +76,7 @@ function normalizeTrainServiceData(
 
   const platform = service.platform ?? null;
 
-  const operator = service.operator;
-  const operatorCode = service.operatorCode;
+  const { operator, operatorCode } = service;
 
   if (service.isCancelled || destinationStop?.isCancelled) {
     return {
@@ -94,26 +99,19 @@ function normalizeTrainServiceData(
     } satisfies TrainJourneyDelayed;
   }
 
-  const originDepartureTime = cleanTimeStr(
-    service.etd === "On time" ? service.std : (service.etd ?? service.std),
-  );
+  const originDepartureTime = resolveTime(service.etd, service.std);
 
-  const destinationArrivalTime = destinationStop
-    ? cleanTimeStr(
-        destinationStop.et === "On time"
-          ? destinationStop.st
-          : (destinationStop.et ?? destinationStop.st),
-      )
-    : null;
+  const destinationArrivalTime = resolveTime(
+    destinationStop?.et,
+    destinationStop?.st,
+  );
 
   const journeyDurationMinutes = getDurationMinutes(
     originDepartureTime,
     destinationArrivalTime,
   );
 
-  const originArrivalTime = cleanTimeStr(
-    service.eta === "On time" ? service.sta : (service.eta ?? service.sta),
-  );
+  const originArrivalTime = resolveTime(service.eta, service.sta);
 
   const status = service.etd === "On time" || !service.etd ? "on-time" : "late";
 
@@ -160,12 +158,19 @@ function normalizeTrainServiceData(
 
 function normalizeTrainServicesData(
   data: LiveDeparturesArrivalsApiResponse,
-  to: string,
-): TrainJourney[] {
-  return data.trainServices.map((service) =>
-    normalizeTrainServiceData(service, to),
+): NormalizedTrainServicesData {
+  const journeys = data.trainServices?.map((service) =>
+    normalizeTrainServiceData(service, data.filtercrs),
   );
+
+  return {
+    journeys,
+    fromCode: data.crs,
+    fromName: data.locationName,
+    toCode: data.filtercrs,
+    toName: data.filterLocationName,
+  };
 }
 
-export { normalizeTrainServicesData };
+export { getDurationMinutes, normalizeTrainServicesData };
 export type { TrainJourney };
